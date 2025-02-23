@@ -62,7 +62,23 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/${{ secrets.EC2_USER }}/trade-api
+            # Install Docker and Docker Compose on Amazon Linux 2023
+            sudo yum update -y
+            sudo amazon-linux-extras install docker -y
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo usermod -a -G docker ec2-user
+            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            docker-compose version
+            
+            # Navigate to the project directory
+            cd /home/ec2-user/trade-api
+
+            # Pull the latest image and start the containers
             docker-compose down
             docker-compose pull
             docker-compose up -d --build
+
+            # Clean up old images
+            docker image prune -f
