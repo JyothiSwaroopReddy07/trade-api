@@ -47,8 +47,8 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t your-dockerhub-username/trade-api:latest .
-          docker push your-dockerhub-username/trade-api:latest
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/trade-api:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/trade-api:latest
 
   deploy:
     runs-on: ubuntu-latest
