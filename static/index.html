@@ -44,6 +44,7 @@
             padding: 10px;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: left;
         }
         .order-status {
             font-weight: bold;
@@ -54,6 +55,18 @@
         }
         .order-status.cancelled {
             color: #f44336;
+        }
+        .update-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-top: 10px;
+        }
+        .update-button:hover {
+            background-color: #1976D2;
         }
     </style>
 </head>
@@ -115,8 +128,36 @@
                     <span>Type: ${order.order_type}</span> | 
                     <span class="order-status ${order.status}">${order.status}</span>
                 `;
+
+                // Add Update Button for Pending Orders
+                if (order.status === 'pending') {
+                    const updateButton = document.createElement('button');
+                    updateButton.innerText = 'Mark as Completed';
+                    updateButton.className = 'update-button';
+                    updateButton.addEventListener('click', () => {
+                        updateOrderStatus(order.id, 'completed');
+                    });
+                    listItem.appendChild(updateButton);
+                }
+
                 orderList.appendChild(listItem);
             }
+        };
+
+        // Function to update order status using REST API
+        const updateOrderStatus = (orderId, status) => {
+            fetch(`/orders/${orderId}?status=${status}`, {
+                method: 'PUT',
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Order updated:', data);
+                orders[orderId].status = status;
+                renderOrders();
+            })
+            .catch((error) => {
+                console.error('Error updating order:', error);
+            });
         };
 
         // Handle incoming WebSocket messages
