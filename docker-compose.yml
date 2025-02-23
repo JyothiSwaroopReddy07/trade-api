@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   fastapi_app:
-    image: ${{ secrets.DOCKERHUB_USERNAME }}/trade-api:latest
+    image: jyothiswaroopreddy07/trade-api:latest
     container_name: trade-api-app
     restart: always
     ports:
