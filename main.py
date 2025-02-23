@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 import json
 import os
+import time  # Import to add delay for database connection
 
 # Initialize FastAPI
 app = FastAPI()
@@ -158,3 +159,18 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/")
 async def get():
     return HTMLResponse(open("static/index.html").read())
+
+# Startup Event to Create Tables Automatically
+@app.on_event("startup")
+def on_startup():
+    retries = 5
+    while retries > 0:
+        try:
+            Base.metadata.create_all(bind=engine)
+            print("Tables created successfully!")
+            break
+        except Exception as e:
+            print(f"Error creating tables: {e}")
+            retries -= 1
+            print(f"Retrying in 5 seconds... ({retries} retries left)")
+            time.sleep(5)
