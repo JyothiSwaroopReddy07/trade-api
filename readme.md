@@ -37,7 +37,7 @@ Trade API is a real-time order management system built using FastAPI for the bac
 
 ### **1. Clone the Repository**
 ```sh
-git clone https://github.com/<your-username>/trade-api.git
+git clone https://github.com/JyothiSwaroopReddy07/trade-api.git
 cd trade-api
 ```
 
@@ -293,7 +293,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## **Contact**
 **Jyothi Swaroop Reddy**  
 Email: [Swaroop](bjyothiswaroop2002@gmail.com)  
-GitHub: [jyothiswaroopreddy07](https://github.com/jyothiswaroopreddy07)  
+GitHub: [jyothiswaroopreddy07](https://github.com/JyothiSwaroopReddy07)  
 
 ---
 
