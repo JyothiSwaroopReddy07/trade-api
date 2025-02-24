@@ -47,8 +47,9 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/trade-api:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/trade-api:latest
+          docker build -t jyothiswaroopreddy07/trade-api:latest .
+          docker push jyothiswaroopreddy07/trade-api:latest
+
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
@@ -57,44 +58,11 @@ jobs:
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          port: 22
+          username: ${{ secrets.EC2_USER }}
+          port: ${{ secrets.EC2_PORT }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Install Docker and Docker Compose on Amazon Linux 2023
-            sudo yum update -y || sudo dnf update -y
-            
-            # Install Docker using dnf (for Amazon Linux 2023)
-            if command -v dnf &> /dev/null; then
-              sudo dnf install docker -y
-            else
-              # Fallback for Amazon Linux 2
-              sudo yum install docker -y
-            fi
-            
-            # Start and Enable Docker Service
-            sudo systemctl start docker
-            sudo systemctl enable docker
-            sudo usermod -a -G docker ec2-user
-            
-            # Install Docker Compose
-            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-            
-            # Confirm Docker Compose installation
-            docker-compose version
-            
-            # Create project directory if it doesn't exist
-            sudo mkdir -p /home/ec2-user/trade-api
-            sudo chown -R ec2-user:ec2-user /home/ec2-user/trade-api
-            
-            # Navigate to the project directory
-            cd /home/ec2-user/trade-api
-            
-            # Pull the latest image and start the containers
-            docker-compose down || true
+            cd /home/${{ secrets.EC2_USER }}/trade-api
+            docker-compose down
             docker-compose pull
             docker-compose up -d --build
-            
-            # Clean up old images
-            docker image prune -f
