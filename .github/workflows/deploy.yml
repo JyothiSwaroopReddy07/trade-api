@@ -62,7 +62,25 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            # Install Git if not present
+            sudo yum install -y git || sudo apt update && sudo apt install -y git
+
+            # Navigate to the project directory or clone if it doesn't exist
+            cd /home/${{ secrets.EC2_USER }} || exit 1
+            if [ ! -d "trade-api" ]; then
+              git clone https://github.com/JyothiSwaroopReddy07/trade-api
+            else
+              cd trade-api
+              git pull origin main
+            fi
+            
+            # Move to the project directory
             cd /home/${{ secrets.EC2_USER }}/trade-api
+
+            # Use Docker Compose to manage the containers
             docker-compose down
             docker-compose pull
             docker-compose up -d --build
+
+            # Clean up unused Docker images
+            docker image prune -f
