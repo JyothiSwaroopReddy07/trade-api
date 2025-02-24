@@ -5,6 +5,10 @@ Trade API is a real-time order management system built using FastAPI for the bac
 
 ---
 
+
+## Live Demo
+[site](http://13.127.179.80:8000/)
+
 ## **Features**
 - **Create Orders:** Submit new orders with symbol, price, quantity, and type (buy/sell).
 - **Update Orders:** Change order status (e.g., from pending to completed) with a single click.
